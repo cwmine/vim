@@ -58,7 +58,7 @@ set  ru     " 打开状态标尺栏
 set  hls    " 高亮找到文本
 set  is     " 即时检索
 set backspace=indent,eol,start  " 使在insert模式下用backspace删除非添加的部分
-set whichwrap=b,s,<,>,[,]   " 使在行首往前移动光标能跳跃到上一行 
+set whichwrap=b,s,<,>,[,]   " 使在行首往前移动光标能跳跃到上一行
 if has("eval")&& v:version>=600
     filetype plugin indent on   " 自动检测文件类型，启用自动相应类型缩进
 endif
@@ -107,7 +107,7 @@ set encoding=utf8       " 默认编码utf8
 if exists("&ambiwidth") " if you use vim in tty, uxterm -cjk or putty with options' Treat CJK ambiguous characters as wide' on
     set ambiwidth=double        " 防止不同语言的字符能够显示
 endif
-if has("gui_running") || MySys()=="windows" 
+if has("gui_running") || MySys()=="windows"
     set langmenu=zh_CN.UTF-8        " 菜单语言防止乱码
     language message zh_CN.UTF-8    " 强制提示语言的格式
 else
@@ -126,7 +126,7 @@ set sw=4    " 自动缩进为4个空格
 set ts=4    " tab为四个字符宽度
 set et      " 编辑状态下（Insert）,输入tab键 输出的是空格，对已存在的文件处理，需输入:retab
 set smarttab    " backspace 自动删除由tab生成的空格
-set nospell       " 拼写检查 
+set nospell       " 拼写检查
 set nowrap          " 不折行
 
 " 断行编辑
@@ -169,78 +169,125 @@ elseif filereadable("../workspace.vim")
     source ../workspace.vim
 endif
 
-" Plugin 设置
-"
-" TagList
+""""""""""""""""""""""""""""""""""" Plugins
+"##### for vundle: vim plugin manager####
+filetype off
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+        "let Vundle manage Vundle required!
+" vim-scripts repos
+Bundle 'taglist.vim'
+Bundle 'minibufexpl.vim'
+" orginal repos on github
+Bundle 'gmarik/vundle'
+Bundle 'scrooloose/nerdtree'
+    " 文件管理器
+"Bundle 'Valloric/YouCompleteMe'
+Bundle 'scrooloose/syntastic'
+    " 语法检查器
+Bundle 'klen/python-mode'
+    " python tool with pylint rope pydoc breakpoints
 
+
+"#####vundle end###########
+filetype plugin indent on   " required!rc()
+" Plugin 设置
+" ### python mode
+"let g:pymode_lint = 0 
+   " close pythonmode checker use syntastic checker
+let g:pymode_virtualenv =1
+    " automatic virtualenv decection also can use PymodeVirtualenv <path> to
+    " activate
+let g:pymode_breakpoint = 1
+let g:pymode_lint =1
+let g:pymode_lint_checkers = ['pyflakes', 'pylint', 'mccabe']
+
+
+
+"#### Syntastic
+let g:syntastic_check_on_open = 1
+"cpp
+"let g:syntastic_cpp_include_dirs = ['/usr/include/']
+"let g:syntastic_cpp_remove_include_errors = 1
+"let g:syntastic_cpp_check_header = 1
+"let g:syntastic_cpp_compiler = 'clang++'
+"let g:syntastic_cpp_compiler_options = '-std=c++11 -stdlib=libstdc++'
+"python
+let g:syntastic_ignore_files = ['\.py$']
+" ignore python checker if use pythonmode checker
+"let g:syntastic_python_checkers=["pyflaks","pylint"]
+
+"set error or warning signs
+let g:syntastic_error_symbol = 'E'
+let g:syntastic_warning_symbol = 'W'
+"whether to show balloons
+let g:syntastic_enable_balloons = 1
+"
+
+" ### TagList
 if MySys()=="windows"
-    let Tlist_Ctags_Cmd= 'ctags'
+    let Tlist_Ctags_Cmd= '~\.vimrc\ctags.exe'
 elseif MySys()=="unix"
     let Tlist_Ctags_Cmd= '/usr/bin/ctags'
 endif
 let Tlist_Show_One_File=1   "不同显示多个文件的tag只显示当前文件的
 let Tlist_Show_Exit_OnlyWindow = 1  "最后之剩Taglist窗口，则退出Vim
 let Tlist_Use_Right_Window = 1      "在右侧显示taglist窗口
-"F9 打开TList
-nmap <silent><F9> : TlistToggle<cr> 
+    "F9 打开TList
+nmap <silent><F9> : TlistToggle<cr>
 
-" newtrw 文件浏览器
-let g:newtrw_winsize =  30
-" 打开水平的文件浏览器
-nmap <silent><leader>fe :Sexplore!<cr>
+"### NerdTree 文件浏览器
+"autocmd VimEnter * NERDTree " 启动 vim 时一并启动 NerdTree
+nmap <silent><F12> :NERDTreeToggle<cr>
+            " 通过 F12 控制 NerdTree 的开关
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") &&b:NERDTreeType == "primary") | q | endif
+            " 关闭 Vim 的最后一个当前文件时也退出 NerdTree
 
-" BufExplorer
+""### BufExplorer --> temporally using minibuffexpl only
+""let g:bufExplorerDefaultHelp=0       " Do not show default help.
+"let g:bufExplorerShowRelativePath=1  " Show relative paths.
+"let g:bufExplorerSortBy='mru'        " Sort by most recently used.
+"let g:bufExplorerSplitRight=0        " Split left.
+"let g:bufExplorerSplitVertical=1     " Split vertically.
+"let g:bufExplorerSplitVertSize = 30  " Split width
+"let g:bufExplorerUseCurrentWindow=1  " Open in new window.
+"autocmd BufWinEnter \[Buf\ List\] setl nonumber
 
-"let g:bufExplorerDefaultHelp=0       " Do not show default help.
-let g:bufExplorerShowRelativePath=1  " Show relative paths.
-let g:bufExplorerSortBy='mru'        " Sort by most recently used.
-let g:bufExplorerSplitRight=0        " Split left.
-let g:bufExplorerSplitVertical=1     " Split vertically.
-let g:bufExplorerSplitVertSize = 30  " Split width
-let g:bufExplorerUseCurrentWindow=1  " Open in new window.
-autocmd BufWinEnter \[Buf\ List\] setl nonumber 
 
-" winManager setting
-let g:winManagerWindowLayout = "BufExplorer,FileExplorer|TagList"
-let g:winManagerWidth = 30
-let g:defaultExplorer = 0
-nmap <C-W><C-F> :FirstExplorerWindow<cr>
-nmap <C-W><C-B> :BottomExplorerWindow<cr>
-nmap <silent> <leader>wm :WMToggle<cr> 
+""### OmniCompletetion  -> replace by YouCompleteMe instead
+"let OmniCpp_NamespaceSearch = 1
+"let OmniCpp_GlobalScopeSearch = 1
+"let OmniCpp_ShowAccess = 1
+"let OmniCpp_ShowPrototypeInAbbr = 1 " 显示函数参数列表
+"let OmniCpp_MayCompleteDot = 1   " 输入 .  后自动补全
+"let OmniCpp_MayCompleteArrow = 1 " 输入 -> 后自动补全
+"let OmniCpp_MayCompleteScope = 1 " 输入 :: 后自动补全
+"let OmniCpp_DefaultNamespaces = ["std", "_GLIBCXX_STD"]
+"" 自动关闭补全窗口
+"au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
+"set completeopt=menuone,menu,longest
+"" 弹出菜单配色
+"highlight Pmenu    guibg=darkgrey  guifg=black
+"highlight PmenuSel guibg=lightgrey guifg=black
+"
 
-" OmniCompletetion
-let OmniCpp_NamespaceSearch = 1
-let OmniCpp_GlobalScopeSearch = 1
-let OmniCpp_ShowAccess = 1
-let OmniCpp_ShowPrototypeInAbbr = 1 " 显示函数参数列表
-let OmniCpp_MayCompleteDot = 1   " 输入 .  后自动补全
-let OmniCpp_MayCompleteArrow = 1 " 输入 -> 后自动补全
-let OmniCpp_MayCompleteScope = 1 " 输入 :: 后自动补全
-let OmniCpp_DefaultNamespaces = ["std", "_GLIBCXX_STD"]
-" 自动关闭补全窗口
-au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
-set completeopt=menuone,menu,longest
-" 弹出菜单配色
-highlight Pmenu    guibg=darkgrey  guifg=black
-highlight PmenuSel guibg=lightgrey guifg=black
+"### minibufexpl plugin
+let g:miniBufExplMapWindowNavVim = 1
+let g:miniBufExplMapWindowNavArrows = 1
+let g:miniBufExplMapCTabSwitchBufs = 1
+let g:miniBufExplModSelTarget = 1
+        "control + the vim direction keys [hjkl] can be made to move you between windows.
+        "control + arrow keys can be made to do the same thing
+        "control + tab & shift + control + tab can be setup to switch through your open windows (like in MS Windows)
+        "control + tab & shift + control + tab can alternatively be setup to cycle forwards and backwards through your modifiable buffers in the current window
 
-" minibufexpl plugin
-  let g:miniBufExplMapWindowNavVim = 1
-  let g:miniBufExplMapWindowNavArrows = 1
-  let g:miniBufExplMapCTabSwitchBufs = 1
-  let g:miniBufExplModSelTarget = 1 
-
-" ############for python #############
-autocmd FileType python set omnifunc=pythoncomplete#Complete
+""""""""""""""""""""""""""""""""""" For Language and Other Software
+" for python
 " This beauty remembers where you were the last time you edited the file, and returns to the same position.
 au BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm '\"")|else|exe "norm $"|endif|endif
-" ##########for python end#####################
 " for Python style
 "   UltimateVimPythonSetup
-if !exists("autocommands_loaded")
-  let autocommands_loaded = 1
-  autocmd BufRead,BufNewFile,FileReadPost *.py source ~/.vim/python.vim
-endif
+" for python end
 
 " for texlive
 autocmd Filetype tex source ~/.vim/auctex.vim

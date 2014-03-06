@@ -37,16 +37,15 @@ set smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
 
 " Auto completion via  ctrl-x ctrl-o
 filetype plugin on
-set omnifunc=pythoncomplete#Complete
-autocmd FileType python runtime! autoload/pythoncomplete.vim
+"set omnifunc=pythoncomplete#Complete
+"autocmd FileType python runtime! autoload/pythoncomplete.vim
 
 " Get this plugin from http://www.vim.org/scripts/script.php?script_id=1112
 " Pressing "K" takes you to the documentation for the word under the cursor.
 autocmd filetype python source ~/.vim/ftplugin/python_pydoc.vim
 
 " Wrap at 72 chars for comments.
-set formatoptions=cq textwidth=72 foldignore= wildignore+=*.py[co]
-
+set formatoptions=cq textwidth=72 foldignore= wildignore+=*.py[co]：
 " Highlight end of line whitespace.
 highlight WhitespaceEOL ctermbg=red guibg=red
 match WhitespaceEOL /\s\+$/
@@ -61,14 +60,14 @@ match WhitespaceEOL /\s\+$/
 
 " `gf` jumps to the filename under the cursor.  Point at an import statement
 " and jump to it!
-python << EOF
-import os
-import sys
-import vim
-for p in sys.path:
-    if os.path.isdir(p):
-        vim.command(r"set path+=%s" % (p.replace(" ", r"\ ")))
-EOF
+"python << EOF
+"import os
+"import sys
+"import vim
+"for p in sys.path:
+"    if os.path.isdir(p):
+"        vim.command(r"set path+=%s" % (p.replace(" ", r"\ ")))
+"EOF
 
 " Generate tags with: ctags -R -f ~/.vim/tags/python27.ctags /usr/lib/python2.4/
 " ctrl-[ to go to the tag under the cursor, ctrl-T to go back.
@@ -81,58 +80,58 @@ set efm=%C\ %.%#,%A\ \ File\ \"%f\"\\,\ line\ %l%.%#,%Z%[%^\ ]%\\@=%m
 
 " Execute a selection of code (very cool!)
 " Use VISUAL to select a range and then hit ctrl-h to execute it.
-python << EOL
-import vim
-def EvaluateCurrentRange():
-    eval(compile('\n'.join(vim.current.range),'','exec'),globals())
-EOL
-map <C-h> :py EvaluateCurrentRange()
-
-" Use F7/Shift-F7 to add/remove a breakpoint (pdb.set_trace)
-" Totally cool.
-python << EOF
-def SetBreakpoint():
-    import re
-    nLine = int( vim.eval( 'line(".")'))
-
-    strLine = vim.current.line
-    strWhite = re.search( '^(\s*)', strLine).group(1)
-
-    vim.current.buffer.append(
-       "%(space)spdb.set_trace() %(mark)s Breakpoint %(mark)s" %
-         {'space':strWhite, 'mark': '#' * 30}, nLine - 1)
-
-    for strLine in vim.current.buffer:
-        if strLine == "import pdb":
-            break
-    else:
-        vim.current.buffer.append( 'import pdb', 0)
-        vim.command( 'normal j1')
-
-vim.command( 'map <f7> :py SetBreakpoint()<cr>')
-
-def RemoveBreakpoints():
-    import re
-
-    nCurrentLine = int( vim.eval( 'line(".")'))
-
-    nLines = []
-    nLine = 1
-    for strLine in vim.current.buffer:
-        if strLine == "import pdb" or strLine.lstrip()[:15] == "pdb.set_trace()":
-            nLines.append( nLine)
-        nLine += 1
-
-    nLines.reverse()
-
-    for nLine in nLines:
-        vim.command( "normal %dG" % nLine)
-        vim.command( "normal dd")
-        if nLine < nCurrentLine:
-            nCurrentLine -= 1
-
-    vim.command( "normal %dG" % nCurrentLine)
-
-vim.command( "map <s-f7> :py RemoveBreakpoints()<cr>")
-EOF
+"python << EOL
+"import vim
+"def EvaluateCurrentRange():
+"    eval(compile('\n'.join(vim.current.range),'','exec'),globals())
+"EOL
+"map <C-h> :py EvaluateCurrentRange()
+"
+"" Use F7/Shift-F7 to add/remove a breakpoint (pdb.set_trace)
+"" Totally cool.
+"python << EOF
+"def SetBreakpoint():
+"    import re
+"    nLine = int( vim.eval( 'line(".")'))
+"
+"    strLine = vim.current.line
+"    strWhite = re.search( '^(\s*)', strLine).group(1)
+"
+"    vim.current.buffer.append(
+"       "%(space)spdb.set_trace() %(mark)s Breakpoint %(mark)s" %
+"         {'space':strWhite, 'mark': '#' * 30}, nLine - 1)
+"
+"    for strLine in vim.current.buffer:
+"        if strLine == "import pdb":
+"            break
+"    else:
+"        vim.current.buffer.append( 'import pdb', 0)
+"        vim.command( 'normal j1')
+"
+"vim.command( 'map <f7> :py SetBreakpoint()<cr>')
+"
+"def RemoveBreakpoints():
+"    import re
+"
+"    nCurrentLine = int( vim.eval( 'line(".")'))
+"
+"    nLines = []
+"    nLine = 1
+"    for strLine in vim.current.buffer:
+"        if strLine == "import pdb" or strLine.lstrip()[:15] == "pdb.set_trace()":
+"            nLines.append( nLine)
+"        nLine += 1
+"
+"    nLines.reverse()
+"
+"    for nLine in nLines:
+"        vim.command( "normal %dG" % nLine)
+"        vim.command( "normal dd")
+"        if nLine < nCurrentLine:
+"            nCurrentLine -= 1
+"
+"    vim.command( "normal %dG" % nCurrentLine)
+"
+"vim.command( "map <s-f7> :py RemoveBreakpoints()<cr>")
+"EOF
 "vim:syntax=vim
