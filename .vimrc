@@ -12,8 +12,9 @@ endfunction
 " 默认脚本
 if MySys()=='windows'
     source $VIMRUNTIME/vimrc_example.vim
-    source $VIMRUNTIME/mswin.vim
-    behave mswin
+    " no need 
+    "source $VIMRUNTIME/mswin.vim
+    "behave mswin
 
     set diffexpr=MyDiff()
 	function! MyDiff()
@@ -84,6 +85,23 @@ nmap <silent><leader>wn :w<cr>
 nmap <silent><leader>l :nohl<cr>
     " 重头同步语法高亮，对于语法高亮出现问题的有效
 nmap <silent><leader>$ :syntax sync fromstart<cr>
+
+    " maximize the GVIM window(without the title bar)
+let g:window_maximum_status=0
+function! SwitchGvimMaximum()
+    if MySys()=='windows'
+        if g:window_maximum_status==0
+            simalt ~x "call libcallnr('vimtweak.dll','EnableMaximize',1)
+            call libcallnr('vimtweak.dll','EnableCaption',0)
+            let g:window_maximum_status=1
+        else
+            simalt ~r "call libcallnr('vimtweak.dll','EnableMaximize',1)
+            call libcallnr('vimtweak.dll','EnableCaption',1)
+            let g:window_maximum_status=0
+        endif
+    endif
+endfunction
+nmap <silent><leader>mx :call SwitchGvimMaximum()<cr>
 
 "系统剪贴板操作
 vnoremap <C-c> "+y
@@ -178,6 +196,8 @@ call vundle#rc()
 " vim-scripts repos
 Bundle 'taglist.vim'
 Bundle 'minibufexpl.vim'
+Bundle 'restart.vim'
+Bundle 'fortran_codecomplete.vim'
 " orginal repos on github
 Bundle 'gmarik/vundle'
 Bundle 'scrooloose/nerdtree'
@@ -187,6 +207,7 @@ Bundle 'scrooloose/syntastic'
     " 语法检查器
 Bundle 'klen/python-mode'
     " python tool with pylint rope pydoc breakpoints
+
 
 
 "#####vundle end###########
@@ -201,7 +222,12 @@ let g:pymode_virtualenv =1
 let g:pymode_breakpoint = 1
 let g:pymode_lint =1
 let g:pymode_lint_checkers = ['pyflakes', 'pylint', 'mccabe']
-
+let g:pymode_rope_completion_bind = '<C-N>'
+let g:pymode_lint_cwindow = 0
+        " close the quickfix
+let g:pymode_rope_complete_on_dot = 0
+        " close the auto completion when typeing dot
+nmap <silent><leader>ch :PymodeLintAuto<cr>
 
 
 "#### Syntastic
