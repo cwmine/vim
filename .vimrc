@@ -207,6 +207,8 @@ Bundle 'scrooloose/syntastic'
     " 语法检查器
 Bundle 'klen/python-mode'
     " python tool with pylint rope pydoc breakpoints
+Bundle  'coot/atp_vim'
+    " automatic Latex Plugin
 
 
 
@@ -259,8 +261,8 @@ endif
 let Tlist_Show_One_File=1   "不同显示多个文件的tag只显示当前文件的
 let Tlist_Show_Exit_OnlyWindow = 1  "最后之剩Taglist窗口，则退出Vim
 let Tlist_Use_Right_Window = 1      "在右侧显示taglist窗口
-    "F9 打开TList
-nmap <silent><F9> : TlistToggle<cr>
+    "F11 打开TList
+nmap <silent><F11> : TlistToggle<cr>
 
 "### NerdTree 文件浏览器
 "autocmd VimEnter * NERDTree " 启动 vim 时一并启动 NerdTree
@@ -315,11 +317,6 @@ au BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm '\"")|
 "   UltimateVimPythonSetup
 " for python end
 
-" for texlive
-autocmd Filetype tex source ~/.vim/auctex.vim
-" for vim latexsuite plugin
-set grepprg=grep\ -nH\ $*
-let g:tex_flavor = "latex"
 
 "
 "
