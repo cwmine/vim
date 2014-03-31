@@ -227,9 +227,12 @@ let g:pymode_lint_checkers = ['pyflakes', 'pylint', 'mccabe']
 let g:pymode_rope_completion_bind = '<C-N>'
 let g:pymode_lint_cwindow = 0
         " close the quickfix
+let g:pymode_lint_on_write = 0
+        " close save checking
 let g:pymode_rope_complete_on_dot = 0
         " close the auto completion when typeing dot
-nmap <silent><leader>ch :PymodeLintAuto<cr>
+autocmd FileType python nmap <silent><leader>ck :PymodeLintAuto<cr> :PymodeLint<cr>
+        " add checking
 
 
 "#### Syntastic
