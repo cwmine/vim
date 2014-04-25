@@ -139,6 +139,9 @@ endif
 
 set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1 "使其支持各种文件编码的自动识别（从最严格的编码到最不严格的编码latan1（能“解码仍和乱码”））,若误判 在:e(打开文件)后加++enc=编码格式 来完成文件的读入
 
+set fileformat=unix " default fileformat to unix
+
+
 " 文本设置
 set sw=4    " 自动缩进为4个空格
 set ts=4    " tab为四个字符宽度
